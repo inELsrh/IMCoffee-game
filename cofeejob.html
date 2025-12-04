@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡夢想啟航 - 問卷調查</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #6B4423 0%, #3E2723 50%, #1B0F0A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(101, 67, 33, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .coffee-beans {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .bean1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .bean2 { top: 20%; right: 15%; animation-delay: 2s; }
+        .bean3 { bottom: 15%; left: 20%; animation-delay: 4s; }
+        .bean4 { bottom: 25%; right: 10%; animation-delay: 6s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(139, 69, 19, 0.3);
+        }
+        
+        .coffee-cup {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: steam 2s infinite;
+        }
+        
+        @keyframes steam {
+            0%, 100% { transform: translateY(0px); opacity: 1; }
+            50% { transform: translateY(-5px); opacity: 0.8; }
+        }
+        
+        h1 {
+            color: #3E2723;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #6B4423;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        .question-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-container p {
+            color: #3E2723;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #D7CCC8;
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .options label {
+            display: block;
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            color: #3E2723;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .options label:hover {
+            background: linear-gradient(135deg, #D7CCC8 0%, #BCAAA4 100%);
+            transform: translateX(5px);
+            border-color: #8D6E63;
+        }
+        
+        .options input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #6B4423;
+        }
+        
+        .options input[type="radio"]:checked + span {
+            font-weight: bold;
+        }
+        
+        .options label:has(input:checked) {
+            background: linear-gradient(135deg, #8D6E63 0%, #6B4423 100%);
+            color: white;
+            border-color: #4E342E;
+            box-shadow: 0 5px 15px rgba(107, 68, 35, 0.4);
+        }
+        
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8D6E63 0%, #6B4423 100%);
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(107, 68, 35, 0.3);
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #6B4423 0%, #4E342E 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 68, 35, 0.5);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .result h3 {
+            color: #3E2723;
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #D7CCC8;
+        }
+        
+        .dimension-result {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #EFEBE9 0%, #F5F5F5 100%);
+            border-radius: 12px;
+            border: 1px solid #D7CCC8;
+        }
+        
+        .dimension-result p {
+            color: #3E2723;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        .dimension-bar {
+            display: flex;
+            height: 40px;
+            margin: 10px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid #8D6E63;
+        }
+        
+        .bar-left, .bar-right {
+            height: 100%;
+            text-align: center;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.6s ease;
+        }
+        
+        .bar-left {
+            background: linear-gradient(90deg, #6B8E23 0%, #556B2F 100%);
+        }
+        
+        .bar-right {
+            background: linear-gradient(90deg, #CD853F 0%, #8B4513 100%);
+        }
+        
+        .dimension-result > div:last-child {
+            text-align: center;
+            margin-top: 10px;
+            color: #6B4423;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .career-types {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-radius: 15px;
+            border: 2px solid #FFB74D;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.2);
+        }
+        
+        .career-types h3 {
+            color: #E65100;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .career-type {
+            margin: 15px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #FF9800;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .career-type:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .career-type h4 {
+            color: #E65100;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .career-type p {
+            color: #5D4037;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question-container {
+                padding: 25px 20px;
+            }
+            
+            .question-container p {
+                font-size: 18px;
+            }
+            
+            .options label {
+                padding: 15px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="coffee-beans bean1">☕</div>
+    <div class="coffee-beans bean2">☕</div>
+    <div class="coffee-beans bean3">☕</div>
+    <div class="coffee-beans bean4">☕</div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="coffee-cup">☕</div>
+            <h1>開店大作戰 - 咖啡夢想啟航</h1>
+            <h2>請選擇每題的答案</h2>
+        </div>
+
+        <form id="quizForm">
+            <div id="question1" class="question-container">
+                <p>1. 「宣傳!咖啡館即將開幕,你覺得最重要的吸客絕招是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q1" value="C">
+                        <span>A. 精心設計開幕期間的限量單品,讓顧客能品味到專屬於這個時刻的稀特風味</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="B">
+                        <span>B. 開幕期間買一送一,搭配網紅打卡活動,迅速提升知名度!</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(1)">下一題</button>
+            </div>
+        
+            <div id="question2" class="question-container">
+                <p>2. 「開店初期,你最怕遇到的恐怖事件是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q2" value="A">
+                        <span>A. 稀特風格和創意,顧客完全不買單</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="S">
+                        <span>B. 數據分析都顯示市場潛力無窮,結果實際營運卻慘賠</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(2)">下一題</button>
+            </div>
+        
+            <div id="question3" class="question-container">
+                <p>3. 「開店初期,人手不足時,你會希望招募到擁有哪些超能力的員工?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q3" value="I">
+                        <span>A. 能夠在自己的崗位上稱立完成工作並解決問題</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="O">
+                        <span>B. 融入團隊、有效合作並為團隊帶來積極影響</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(3)">下一題</button>
+            </div>
+        
+            <div id="question4" class="question-container">
+                <p>4. 「咖啡館營運漸入佳境,你接下來的目標是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q4" value="A">
+                        <span>A. 打造咖啡藝術殿堂,不只是喝咖啡,更是來體驗一場『藝術饗宴』!</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q4" value="S">
+                        <span>B. 建立咖啡品質實驗室,用『數據』打造『完美咖啡』!</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(4)">下一題</button>
+            </div>
+        
+            <div id="question5" class="question-container">
+                <p>5. 「咖啡館大小事,你喜歡…」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q5" value="I">
+                        <span>A. 一個人說了算,打造稱一無二的咖啡王國!</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q5" value="O">
+                        <span>B. 召集夥伴,集思廣益激盪創意火花!</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(5)">下一題</button>
+            </div>
+        
+            <div id="question6" class="question-container">
+                <p>6. 「面對競爭激烈的咖啡戰場,老闆你的致勝策略是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q6" value="C">
+                        <span>A. 堅持職人精神,用一杯好咖啡征服客人的心!</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q6" value="B">
+                        <span>B. 展開瘋狂行銷,讓咖啡館成為城市傳說!</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(6)">下一題</button>
+            </div>
+        
+            <div id="question7" class="question-container">
+                <p>7. 「每天最讓老闆你興奮的時刻是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q7" value="A">
+                        <span>A. 在吧台變身咖啡魔法師,調製出稱一無二的夢幻飲品!</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q7" value="S">
+                        <span>B. 在櫃台化身數據分析師,精準掌握營運狀況!</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(7)">下一題</button>
+            </div>
+        
+            <div id="question8" class="question-container">
+                <p>8. 「收到客人的負評,老闆你會…」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q8" value="I">
+                        <span>A. 親自回應顧客的負評,進一步了解問題並針對性地改進產品或服務。</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q8" value="O">
+                        <span>B. 指導團隊處理負評,並根據反饋修正流程和服務標準,讓團隊協同改進。</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(8)">下一題</button>
+            </div>
+        
+            <div id="question9" class="question-container">
+                <p>9. 「咖啡館要更上一層樓,老闆你打算…」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q9" value="C">
+                        <span>A. 開辦咖啡學院,培養咖啡專業人才,推廣咖啡文化</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q9" value="B">
+                        <span>B. 結合行銷策略,將咖啡品牌打造成知名的商業帝國</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(9)">下一題</button>
+            </div>
+        
+            <div id="question10" class="question-container">
+                <p>10. 「在經營咖啡店過程中,哪種管理方式最符合你的風格?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q10" value="I">
+                        <span>A. 注重每個細節,什麼事情都想親自掌控,確保運作順利</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q10" value="O">
+                        <span>B. 信任團隊,給予空間與自由,讓每個人都能盡情發揮</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(10)">下一題</button>
+            </div>
+        
+            <div id="question11" class="question-container">
+                <p>11. 「如何讓咖啡館更有魅力,成為客人心中的 No.1?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q11" value="A">
+                        <span>A. 創造具有藝術氛圍的空間,讓顧客在品味咖啡的同時感受美學與情感的共鳴。</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q11" value="S">
+                        <span>B. 以精確的方式設計咖啡館環境,利用科學的布局和配備,提升顧客的舒適感,讓他們全方位享受咖啡時光。</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(11)">下一題</button>
+            </div>
+        
+            <div id="question12" class="question-container">
+                <p>12. 「老闆你心中的咖啡館未來藍圖是?」</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="q12" value="C">
+                        <span>A. 成為精品咖啡的殿堂,專注於每一杯咖啡的工藝,提供稱特的風味和極致的體驗。</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="q12" value="B">
+                        <span>B. 發展成國際知名連鎖品牌,擴大市場佔有率並提供多元化產品,提高品牌知名度和市場佔有率。</span>
+                    </label>
+                </div>
+                <button type="button" class="btn-submit" onclick="nextQuestion(12)">完成</button>
+            </div>
+        
+            <div id="result" class="result">
+                <h3>你的咖啡職涯類型:</h3>
+                <div class="dimension-result">
+                    <p><strong>維度一:匠人 vs. 商業</strong></p>
+                    <div class="dimension-bar">
+                        <div id="c-bar" class="bar-left"></div>
+                        <div id="b-bar" class="bar-right"></div>
+                    </div>
+                    <div id="cb-result"></div>
+                </div>
+                
+                <div class="dimension-result">
+                    <p><strong>維度二:藝術 vs. 科學</strong></p>
+                    <div class="dimension-bar">
+                        <div id="a-bar" class="bar-left"></div>
+                        <div id="s-bar" class="bar-right"></div>
+                    </div>
+                    <div id="as-result"></div>
+                </div>
+                
+                <div class="dimension-result">
+                    <p><strong>維度三:稱立 vs. 團隊</strong></p>
+                    <div class="dimension-bar">
+                        <div id="i-bar" class="bar-left"></div>
+                        <div id="o-bar" class="bar-right"></div>
+                    </div>
+                    <div id="io-result"></div>
+                </div>
+                
+                <div id="career-types-container" class="career-types">
+                    <h3>你適合的咖啡職涯類型:</h3>
+                    <div id="career-types"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        const questions = 12;
+        let answers = {};
+        
+        const dimensionMapping = {
+            'q1': 'CB',
+            'q2': 'AS',
+            'q3': 'IO',
+            'q4': 'AS',
+            'q5': 'IO',
+            'q6': 'CB',
+            'q7': 'AS',
+            'q8': 'IO',
+            'q9': 'CB',
+            'q10': 'IO',
+            'q11': 'AS',
+            'q12': 'CB'
+        };
+        
+        const careerTypes = {
+            'CAI': {type: '精品工藝師（Artisanal Creator）', description: '匠人 + 藝術 + 獨立 = 精品咖啡職人、咖啡研發師'},
+            'CAO': {type: '藝術館長（Artistic Director）', description: '匠人 + 藝術 + 團隊 = 咖啡藝術總監、咖啡館經營者'},
+            'CSI': {type: '風味科學家（Flavor Scientist）', description: '匠人 + 科學 + 獨立 = Q Grader(咖啡品質鑑定師)、咖啡講師'},
+            'CSO': {type: '生產教練（Production Coach）', description: '匠人 + 科學 + 團隊 = 咖啡培訓師、咖啡生產管理者'},
+            'BAI': {type: '靈感策展人（Creative Curator）', description: '商業 + 藝術 + 獨立 = 咖啡創新商業顧問、咖啡內容創作者'},
+            'BAO': {type: '品牌領航者（Brand Navigator）', description: '商業 + 藝術 + 團隊 = 咖啡品牌創辦人、連鎖咖啡館經營者'},
+            'BSI': {type: '市場解碼師（Market Analyst）', description: '商業 + 科學 + 獨立 = 咖啡市場分析師、咖啡技術顧問'},
+            'BSO': {type: '連鎖指揮官（Chain Strategist）', description: '商業 + 科學 + 團隊 = 連鎖品牌經理'}
+        };
+
+        function nextQuestion(questionNumber) {
+            const selectedOption = document.querySelector(`input[name="q${questionNumber}"]:checked`);
+            if (selectedOption) {
+                answers[`q${questionNumber}`] = selectedOption.value;
+            } else {
+                alert('請選擇一個答案');
+                return;
+            }
+            
+            document.getElementById(`question${questionNumber}`).style.display = 'none';
+            if (questionNumber < questions) {
+                document.getElementById(`question${questionNumber + 1}`).style.display = 'block';
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            let dimensions = {C: 0, B: 0, A: 0, S: 0, I: 0, O: 0};
+            
+            for (let question in answers) {
+                let answer = answers[question];
+                dimensions[answer]++;
+            }
+            
+            const cb_total = 4;
+            const as_total = 4;
+            const io_total = 4;
+            
+            const c_percentage = (dimensions.C / cb_total) * 100;
+            const b_percentage = (dimensions.B / cb_total) * 100;
+            const a_percentage = (dimensions.A / as_total) * 100;
+            const s_percentage = (dimensions.S / as_total) * 100;
+            const i_percentage = (dimensions.I / io_total) * 100;
+            const o_percentage = (dimensions.O / io_total) * 100;
+            
+            document.getElementById('c-bar').style.width = `${c_percentage}%`;
+            document.getElementById('c-bar').textContent = c_percentage >= 15 ? `匠人 ${c_percentage}%` : '';
+            document.getElementById('b-bar').style.width = `${b_percentage}%`;
+            document.getElementById('b-bar').textContent = b_percentage >= 15 ? `商業 ${b_percentage}%` : '';
+            
+            document.getElementById('a-bar').style.width = `${a_percentage}%`;
+            document.getElementById('a-bar').textContent = a_percentage >= 15 ? `藝術 ${a_percentage}%` : '';
+            document.getElementById('s-bar').style.width = `${s_percentage}%`;
+            document.getElementById('s-bar').textContent = s_percentage >= 15 ? `科學 ${s_percentage}%` : '';
+            
+            document.getElementById('i-bar').style.width = `${i_percentage}%`;
+            document.getElementById('i-bar').textContent = i_percentage >= 15 ? `稱立 ${i_percentage}%` : '';
+            document.getElementById('o-bar').style.width = `${o_percentage}%`;
+            document.getElementById('o-bar').textContent = o_percentage >= 15 ? `團隊 ${o_percentage}%` : '';
+            
+            let dim1 = [];
+            let dim2 = [];
+            let dim3 = [];
+            
+            if (c_percentage > b_percentage) {
+                dim1 = ['C'];
+                document.getElementById('cb-result').textContent = '你更傾向於【商業】';
+            } else if(b_percentage > c_percentage){
+                dim1 = ['B'];
+                document.getElementById('cb-result').textContent = '你更傾向於【匠人】';
+            }else {
+                dim1 = ['C', 'B'];
+                document.getElementById('cb-result').textContent = '你同時具備【匠人】和【商業】特質';
+            }
+            
+            if (a_percentage > s_percentage) {
+                dim2 = ['A'];
+                document.getElementById('as-result').textContent = '你更傾向於【藝術】';
+            } else if (s_percentage > a_percentage) {
+                dim2 = ['S'];
+                document.getElementById('as-result').textContent = '你更傾向於【科學】';
+            } else {
+                dim2 = ['A', 'S'];
+                document.getElementById('as-result').textContent = '你同時具備【藝術】和【科學】特質';
+            }
+            
+            if (i_percentage > o_percentage) {
+                dim3 = ['I'];
+                document.getElementById('io-result').textContent = '你更傾向於【稱立】';
+            } else if (o_percentage > i_percentage) {
+                dim3 = ['O'];
+                document.getElementById('io-result').textContent = '你更傾向於【團隊】';
+            } else {
+                dim3 = ['I', 'O'];
+                document.getElementById('io-result').textContent = '你同時具備【稱立】和【團隊】特質';
+            }
+            
+            let possibleTypes = [];
+            for (let d1 of dim1) {
+                for (let d2 of dim2) {
+                    for (let d3 of dim3) {
+                        possibleTypes.push(d1 + d2 + d3);
+                    }
+                }
+            }
+            
+            let careerTypesHtml = '';
+            possibleTypes.forEach(typeCode => {
+                if (careerTypes[typeCode]) {
+                    careerTypesHtml += `<div class="career-type">
+                        <h4>${typeCode}: ${careerTypes[typeCode].type}</h4>
+                        <p>${careerTypes[typeCode].description}</p>
+                    </div>`;
+                }
+            });
+            
+            document.getElementById('career-types').innerHTML = careerTypesHtml;
+            document.getElementById('result').style.display = 'block';
+        }
+
+        // 頁面載入時顯示第一題
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('question1').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
